@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "appfit_dia",
+            "cwd": "appfit_dia",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "appfit_dia (profile mode)",
+            "cwd": "appfit_dia",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "appfit_dia (release mode)",
+            "cwd": "appfit_dia",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
