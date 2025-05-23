@@ -3,6 +3,7 @@ import 'screens/home_screen.dart';
 import 'screens/statistics_screen.dart';
 import 'screens/exercises_screen.dart';
 import 'screens/help_screen.dart';
+import 'screens/profile_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Mi App con Menú',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFc8d7e6), // Fondo: color5
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF3691f6),             // color1
           primary: const Color(0xFF3691f6),               // color1
           secondary: const Color(0xFF78bcf5),             // color2
-          background: const Color(0xFFc8d7e6),            // color5
+          surface: const Color(0xFFc8d7e6),          // color5
           onPrimary: Colors.white,
           onSecondary: Colors.white,
         ),
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
         '/inicio': (context) => const HomeScreen(),
         '/estadisticas': (context) => const StaticsScreen(),
         '/ejercicios': (context) => const ExercisesScreen(),
+        '/perfil': (context) => const ProfileScreen(),
         '/ayuda': (context) => const HelpScreen(),
       },
     );
