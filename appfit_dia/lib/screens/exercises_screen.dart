@@ -10,7 +10,7 @@ class ExercisesScreen extends StatelessWidget {
       title: 'Ejecicios',
       body: Center(
         child: Text('Bienvenido a la pantalla de ejercicios'),
-      ),
+      ), appBarActions: [],
     );
   }
 }

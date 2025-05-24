@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
       title: 'Inicio',
       body: Center(
         child: Text('Bienvenido a la pantalla de inicio'),
-      ),
+      ), appBarActions: [],
     );
   }
 }

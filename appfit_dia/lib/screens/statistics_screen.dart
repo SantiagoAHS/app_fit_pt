@@ -10,7 +10,7 @@ class StaticsScreen extends StatelessWidget {
       title: 'Estadisticas',
       body: Center(
         child: Text('Bienvenido a la pantalla de estadísticas'),
-      ),
+      ), appBarActions: [],
     );
   }
 }

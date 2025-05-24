@@ -10,7 +10,7 @@ class HelpScreen extends StatelessWidget {
       title: 'Ayuda',
       body: Center(
         child: Text('Bienvenido a la pantalla de ayuda'),
-      ),
+      ), appBarActions: [],
     );
   }
 }
