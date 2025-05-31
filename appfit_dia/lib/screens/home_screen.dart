@@ -6,11 +6,48 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AppScaffold(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isVerySmallScreen = screenWidth < 300;
+    final isSmallScreen = screenWidth < 600;
+
+    return AppScaffold(
       title: 'Inicio',
-      body: Center(
-        child: Text('Bienvenido a la pantalla de inicio'),
-      ), appBarActions: [],
+      body: isVerySmallScreen
+          ? _buildVerySmallLayout()
+          : isSmallScreen
+              ? _buildMobileLayout()
+              : _buildLargeScreenLayout(),
+      appBarActions: const [],
+    );
+  }
+
+  Widget _buildVerySmallLayout() {
+    return const Center(
+      child: Text(
+        'Inicio (muy pequeño)',
+        style: TextStyle(fontSize: 12),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout() {
+    return const Center(
+      child: Text(
+        'Bienvenido a la pantalla de inicio',
+        style: TextStyle(fontSize: 16),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildLargeScreenLayout() {
+    return const Center(
+      child: Text(
+        'Bienvenido a la pantalla de inicio en una pantalla grande',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
