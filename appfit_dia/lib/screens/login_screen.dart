@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,10 +25,49 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.message}')),
+      );
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al iniciar sesión con Google: $e')),
       );
     }
 
@@ -45,10 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       body: isVerySmallScreen
-      ? _buildVerySmallLayout()
-      : isSmallScreen
-          ? _buildMobileLayout()
-          : _buildLargeScreenLayout(),
+          ? _buildVerySmallLayout()
+          : isSmallScreen
+              ? _buildMobileLayout()
+              : _buildLargeScreenLayout(),
     );
   }
 
@@ -81,6 +121,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _login,
                   child: const Text('Ingresar'),
                 ),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: _signInWithGoogle,
+            icon: Image.asset('assets/icon/google.png', height: 24, width: 24),
+            label: const Text('Ingresar con Google'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              side: const BorderSide(color: Colors.grey),
+            ),
+          ),
         ],
       ),
     );
@@ -91,7 +142,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Row(
       children: [
-        // Formulario
         Expanded(
           flex: 1,
           child: Padding(
@@ -118,16 +168,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 30),
                 _isLoading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _login,
-                        child: const Text('Ingresar'),
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ElevatedButton(
+                            onPressed: _login,
+                            child: const Text('Ingresar'),
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton.icon(
+                            onPressed: _signInWithGoogle,
+                            icon: Image.asset('assets/icon/google.png', height: 24, width: 24),
+                            label: const Text('Ingresar con Google'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
+                              side: const BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                        ],
                       ),
               ],
             ),
           ),
         ),
-
-        // Imagen / Fondo
         Expanded(
           flex: 1,
           child: Container(
@@ -145,38 +209,53 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildVerySmallLayout() {
-  return SingleChildScrollView(
-    padding: const EdgeInsets.all(12),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(height: 40),
-        const Text(
-          'Login',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: emailController,
-          style: const TextStyle(fontSize: 12),
-          decoration: const InputDecoration(labelText: 'Correo'),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: passwordController,
-          obscureText: true,
-          style: const TextStyle(fontSize: 12),
-          decoration: const InputDecoration(labelText: 'Contraseña'),
-        ),
-        const SizedBox(height: 16),
-        _isLoading
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: _login,
-                child: const Text('Entrar', style: TextStyle(fontSize: 12)),
-              ),
-      ],
-    ),
-  );
-}
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 40),
+          const Text(
+            'Login',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: emailController,
+            style: const TextStyle(fontSize: 12),
+            decoration: const InputDecoration(labelText: 'Correo'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: passwordController,
+            obscureText: true,
+            style: const TextStyle(fontSize: 12),
+            decoration: const InputDecoration(labelText: 'Contraseña'),
+          ),
+          const SizedBox(height: 16),
+          _isLoading
+              ? const CircularProgressIndicator()
+              : Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _login,
+                      child: const Text('Entrar', style: TextStyle(fontSize: 12)),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      onPressed: _signInWithGoogle,
+                      icon: Image.asset('assets/icon/google.png', height: 16, width: 16),
+                      label: const Text('Google', style: TextStyle(fontSize: 12)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+        ],
+      ),
+    );
+  }
 }

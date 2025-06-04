@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/app_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fl_chart/fl_chart.dart';
+import '../widgets/imc_chart.dart';
 
 
 class StaticsScreen extends StatelessWidget {
@@ -15,7 +15,7 @@ class StaticsScreen extends StatelessWidget {
     final isSmallScreen = screenWidth < 600;
 
     return AppScaffold(
-      title: 'Ejercicios',
+      title: 'Estadísticas',
       body: isVerySmallScreen
           ? _buildVerySmallLayout()
           : isSmallScreen
@@ -24,47 +24,6 @@ class StaticsScreen extends StatelessWidget {
       appBarActions: const [],
     );
   }
-
-  
-
-  Widget _buildIMCChart(double imc) {
-    return SizedBox(
-      height: 200,
-      child: BarChart(
-        BarChartData(
-          barGroups: [
-            BarChartGroupData(
-              x: 0,
-              barRods: [
-                BarChartRodData(
-                  toY: imc,
-                  color: Colors.blue,
-                  width: 30,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ],
-            ),
-          ],
-          titlesData: FlTitlesData(
-            leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: true),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  return const Text("IMC");
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          gridData: const FlGridData(show: false),
-        ),
-      ),
-    );
-  }
-
 
   Widget _buildIMCDisplay({bool showChart = true}) {
   final user = FirebaseAuth.instance.currentUser;
@@ -109,7 +68,7 @@ class StaticsScreen extends StatelessWidget {
           Text('Clasificación: $clasificacion', style: const TextStyle(fontSize: 16)),
           if (showChart) ...[
             const SizedBox(height: 20),
-            _buildIMCChart(imc),
+            IMCChart(imc: imc),
           ]
         ],
       );
@@ -135,33 +94,36 @@ class StaticsScreen extends StatelessWidget {
 
 
   Widget _buildMobileLayout() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Bienvenido a la pantalla de estadisticas',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), ),
-            _buildIMCDisplay(showChart: true),
-          ],
+  return SingleChildScrollView(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Bienvenido a la pantalla de estadisticas',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-      ),
-    );
-  }
+        _buildIMCDisplay(showChart: true),
+      ],
+    ),
+  );
+}
 
-  Widget _buildLargeScreenLayout() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Bienvenido a la pantalla de estadisticas',style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold), ),
-            _buildIMCDisplay(showChart: true),
-          ],
+Widget _buildLargeScreenLayout() {
+  return SingleChildScrollView(
+    padding: const EdgeInsets.all(32),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Bienvenido a la pantalla de estadisticas',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
-      ),
-    );
-  }
+        _buildIMCDisplay(showChart: true),
+      ],
+    ),
+  );
+}
+
 }
 

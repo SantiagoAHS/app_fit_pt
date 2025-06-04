@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/app_scaffold.dart';
+import '../widgets/peso_altura_form.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,13 +14,19 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController pesoController = TextEditingController();
   final TextEditingController alturaController = TextEditingController();
+  final TextEditingController pesoIdealController = TextEditingController(); // agregado
   bool _isLoading = false;
 
   Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    if (!mounted) return;
-    Navigator.pushReplacementNamed(context, '/login');
-  }
+  await FirebaseAuth.instance.signOut();
+
+  if (!mounted) return;
+
+  Navigator.of(context).pushNamedAndRemoveUntil(
+    '/login',
+    (Route<dynamic> route) => false,
+  );
+}
 
   Future<void> _saveData() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -27,9 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final double? peso = double.tryParse(pesoController.text);
     final double? altura = double.tryParse(alturaController.text);
+    final double? pesoIdeal = double.tryParse(pesoIdealController.text); // agregado
 
-    if (peso == null || altura == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Datos inválidos')));
+    if (peso == null || altura == null || pesoIdeal == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Datos inválidos')),
+      );
       return;
     }
 
@@ -38,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'peso': peso,
       'altura': altura,
+      'peso_ideal': pesoIdeal, // agregado
     }, SetOptions(merge: true));
 
     setState(() => _isLoading = false);
@@ -54,11 +65,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final data = snapshot.data!.data()!;
         final peso = data['peso']?.toString() ?? 'N/A';
         final altura = data['altura']?.toString() ?? 'N/A';
+        final pesoIdeal = data['peso_ideal']?.toString() ?? 'N/A'; // agregado
 
         return Column(
           children: [
             Text('Peso: $peso kg'),
             Text('Altura: $altura m'),
+            Text('Peso ideal: $pesoIdeal kg'), // agregado
           ],
         );
       },
@@ -66,27 +79,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildForm() {
-    return Column(
-      children: [
-        TextField(
-          controller: pesoController,
-          decoration: const InputDecoration(labelText: 'Peso (kg)'),
-          keyboardType: TextInputType.number,
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: alturaController,
-          decoration: const InputDecoration(labelText: 'Altura (m)'),
-          keyboardType: TextInputType.number,
-        ),
-        const SizedBox(height: 16),
-        _isLoading
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: _saveData,
-                child: const Text('Guardar datos'),
-              ),
-      ],
+    return PesoAlturaForm(
+      pesoController: pesoController,
+      alturaController: alturaController,
+      pesoIdealController: pesoIdealController, // agregado
+      isLoading: _isLoading,
+      onSave: _saveData,
     );
   }
 
@@ -176,7 +174,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         decoration: BoxDecoration(
           color: Colors.blueGrey.shade50,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 12, offset: Offset(0, 6))],
+          boxShadow: const [
+            BoxShadow(color: Colors.black12, blurRadius: 12, offset: Offset(0, 6))
+          ],
         ),
         child: SingleChildScrollView(
           child: Column(
