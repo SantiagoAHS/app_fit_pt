@@ -42,7 +42,7 @@ class ExercisesScreen extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Color(0xFFe0f0ff),
+            color: const Color(0xFFe0f0ff),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(

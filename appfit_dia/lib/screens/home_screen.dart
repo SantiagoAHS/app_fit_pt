@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _currentMessageIndex = 0;
   bool _visible = false;
+  Timer? _timer; // ← Guardamos el Timer aquí
 
   @override
   void initState() {
@@ -26,15 +27,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Primera animación
     Future.delayed(const Duration(milliseconds: 400), () {
-      setState(() => _visible = true);
+      if (mounted) {
+        setState(() => _visible = true);
+      }
     });
 
-    // Cambiar frases cada 3 segundos
-    Timer.periodic(const Duration(seconds: 3), (timer) {
-      setState(() {
-        _currentMessageIndex = (_currentMessageIndex + 1) % _messages.length;
-      });
+    // Iniciar el Timer y guardar la referencia
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (mounted) {
+        setState(() {
+          _currentMessageIndex = (_currentMessageIndex + 1) % _messages.length;
+        });
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // ← Cancelamos el Timer para evitar errores
+    super.dispose();
   }
 
   @override
