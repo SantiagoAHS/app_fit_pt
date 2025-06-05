@@ -209,53 +209,83 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildVerySmallLayout() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(12),
+  return SafeArea(
+    child: SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 20),
           const Text(
             'Login',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: emailController,
-            style: const TextStyle(fontSize: 12),
-            decoration: const InputDecoration(labelText: 'Correo'),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
           TextField(
+            controller: emailController,
+            style: const TextStyle(fontSize: 10),
+            decoration: const InputDecoration(
+              labelText: 'Correo',
+              isDense: true,
+              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
             controller: passwordController,
             obscureText: true,
-            style: const TextStyle(fontSize: 12),
-            decoration: const InputDecoration(labelText: 'Contraseña'),
+            style: const TextStyle(fontSize: 10),
+            decoration: const InputDecoration(
+              labelText: 'Contraseña',
+              isDense: true,
+              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _isLoading
-              ? const CircularProgressIndicator()
-              : Column(
+              ? const CircularProgressIndicator(strokeWidth: 2)
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(
-                      onPressed: _login,
-                      child: const Text('Entrar', style: TextStyle(fontSize: 12)),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                        ),
+                        child: const Text(
+                          'Entrar',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    ElevatedButton.icon(
-                      onPressed: _signInWithGoogle,
-                      icon: Image.asset('assets/icon/google.png', height: 16, width: 16),
-                      label: const Text('Google', style: TextStyle(fontSize: 12)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        side: const BorderSide(color: Colors.grey),
+                    const SizedBox(width: 8), // Espacio entre botones
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _signInWithGoogle,
+                        icon: Image.asset(
+                          'assets/icon/google.png',
+                          height: 12,
+                          width: 12,
+                        ),
+                        label: const Text(
+                          'Google',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          side: const BorderSide(color: Colors.grey),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                        ),
                       ),
                     ),
                   ],
                 ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

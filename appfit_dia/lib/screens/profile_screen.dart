@@ -106,30 +106,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildVerySmallLayout() {
-    final user = FirebaseAuth.instance.currentUser;
-    final email = user?.email ?? 'Correo no disponible';
-    final uid = user?.uid ?? '';
+  final user = FirebaseAuth.instance.currentUser;
+  final email = user?.email ?? 'Correo no disponible';
+  final uid = user?.uid ?? '';
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(12),
+  return SafeArea(
+    child: SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('Perfil', style: TextStyle(fontSize: 14)),
-          Text(email, style: const TextStyle(fontSize: 16, color: Colors.grey)),
-          const SizedBox(height: 12),
-          _buildDataDisplay(uid),
-          const SizedBox(height: 12),
-          _buildForm(),
+          const Text(
+            'Perfil',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            email,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+          ),
+          const SizedBox(height: 10),
+          _buildDataDisplay(uid), // Asegúrate de que este widget sea compacto
+          const SizedBox(height: 10),
+          _buildForm(), // Ajusta dentro de este widget los paddings y tamaños también
           const SizedBox(height: 12),
           ElevatedButton.icon(
-            icon: const Icon(Icons.logout, size: 16),
-            label: const Text('Salir', style: TextStyle(fontSize: 12)),
+            icon: const Icon(Icons.logout, size: 14),
+            label: const Text('Salir', style: TextStyle(fontSize: 10)),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+            ),
             onPressed: _signOut,
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildMobileLayout() {
     final user = FirebaseAuth.instance.currentUser;
