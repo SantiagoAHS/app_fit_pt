@@ -3,6 +3,8 @@ import '../widgets/app_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/imc_chart.dart';
+import '../widgets/step_counter_widget.dart';
+
 
 
 class StaticsScreen extends StatelessWidget {
@@ -77,21 +79,27 @@ class StaticsScreen extends StatelessWidget {
 }
 
   Widget _buildVerySmallLayout() {
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Estadísticas', style: TextStyle(fontSize: 14)),
-          const SizedBox(height: 10),
-          _buildIMCDisplay(showChart: false),
-        ],
-      ),
+  return SingleChildScrollView(
+    padding: const EdgeInsets.all(8),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text('Estadísticas', style: TextStyle(fontSize: 14)),
+        const SizedBox(height: 10),
+        Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: _buildIMCDisplay(showChart: false),
+          ),
+        ),
+        const SizedBox(height: 20),
+        const StepCounterWidget(),
+      ],
     ),
   );
 }
-
 
   Widget _buildMobileLayout() {
   return SingleChildScrollView(
@@ -103,7 +111,17 @@ class StaticsScreen extends StatelessWidget {
           'Bienvenido a la pantalla de estadisticas',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        _buildIMCDisplay(showChart: true),
+        const SizedBox(height: 20),
+        Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _buildIMCDisplay(showChart: true),
+          ),
+        ),
+        const SizedBox(height: 30),
+        const StepCounterWidget(), 
       ],
     ),
   );
@@ -119,7 +137,16 @@ Widget _buildLargeScreenLayout() {
           'Bienvenido a la pantalla de estadisticas',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
-        _buildIMCDisplay(showChart: true),
+        Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.all(32),  // más espacio en pantalla grande
+            child: _buildIMCDisplay(showChart: true),
+          ),
+        ),
+        const SizedBox(height: 30),
+        const StepCounterWidget(), 
       ],
     ),
   );
