@@ -19,20 +19,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _currentMessageIndex = 0;
   bool _visible = false;
-  Timer? _timer; // ← Guardamos el Timer aquí
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
 
-    // Primera animación
     Future.delayed(const Duration(milliseconds: 400), () {
       if (mounted) {
         setState(() => _visible = true);
       }
     });
 
-    // Iniciar el Timer y guardar la referencia
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (mounted) {
         setState(() {
@@ -44,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // ← Cancelamos el Timer para evitar errores
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -98,21 +96,65 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMobileLayout() {
-    return const Center(
-      child: Text(
-        'Bienvenido a la pantalla de inicio',
-        style: TextStyle(fontSize: 16),
-        textAlign: TextAlign.center,
+    return SafeArea(
+      child: Center(
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 800),
+          opacity: _visible ? 1.0 : 0.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: Text(
+                    _messages[_currentMessageIndex],
+                    key: ValueKey(_messages[_currentMessageIndex]),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildLargeScreenLayout() {
-    return const Center(
-      child: Text(
-        'Bienvenido a la pantalla de inicio en una pantalla grande',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
+    return SafeArea(
+      child: Center(
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 800),
+          opacity: _visible ? 1.0 : 0.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: Text(
+                    _messages[_currentMessageIndex],
+                    key: ValueKey(_messages[_currentMessageIndex]),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
