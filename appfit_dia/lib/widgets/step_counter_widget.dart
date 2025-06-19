@@ -22,7 +22,7 @@ class _StepCounterWidgetState extends State<StepCounterWidget> {
   @override
   void initState() {
     super.initState();
-    _requestActivityPermission(); // Pedir permiso al iniciar
+    _requestActivityPermission();
 
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream.listen(
@@ -47,30 +47,42 @@ class _StepCounterWidgetState extends State<StepCounterWidget> {
     }
   }
 
-  void _onStepCount(StepCount event) {
+  void _onStepCount(StepCount event) async {
+    if (userId == null) return;
+
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final docId = '$userId-$today';
+    final docRef = _firestore.collection('pasos_por_dia').doc(docId);
+    final docSnapshot = await docRef.get();
+
+    int sensorInicio;
+
+    if (docSnapshot.exists && docSnapshot.data()!.containsKey('sensor_inicio')) {
+      sensorInicio = docSnapshot['sensor_inicio'];
+    } else {
+      sensorInicio = event.steps;
+      await docRef.set({
+        'fecha': today,
+        'usuario': userId,
+        'sensor_inicio': sensorInicio,
+        'timestamp': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    }
+
+    final pasosDelDia = event.steps - sensorInicio;
+
     setState(() {
-      _steps = event.steps;
+      _steps = pasosDelDia;
     });
 
-    _saveStepsToFirestore(event.steps);
+    await docRef.set({
+      'pasos': pasosDelDia,
+      'timestamp': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
   void _onStepCountError(error) {
     debugPrint('Error en el contador de pasos: $error');
-  }
-
-  Future<void> _saveStepsToFirestore(int steps) async {
-    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-    if (userId == null) return; // usuario no autenticado
-    final docRef = _firestore.collection('pasos_por_dia').doc('$userId-$today');
-
-    await docRef.set({
-      'fecha': today,
-      'usuario': userId,
-      'pasos': steps,
-      'timestamp': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true)); // merge:true actualiza si ya existe
   }
 
   @override
@@ -93,7 +105,7 @@ class _StepCounterWidgetState extends State<StepCounterWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Pasos Contados',
+              'Pasos del día',
               style: TextStyle(fontSize: titleFontSize, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),

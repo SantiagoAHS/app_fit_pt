@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/imc_chart.dart';
 import '../widgets/step_counter_widget.dart';
 import '../widgets/step_counter_weekly.dart'; 
+import '../widgets/routines_complete.dart';
 
 class StaticsScreen extends StatelessWidget {
   const StaticsScreen({super.key});
@@ -77,43 +78,56 @@ class StaticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVerySmallLayout() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text('Estadísticas', style: TextStyle(fontSize: 14)),
-          const SizedBox(height: 10),
+// Dentro de tu _buildVerySmallLayout():
 
-          // IMC card
-          Card(
-            elevation: 6,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: _buildIMCDisplay(showChart: false),
-            ),
+Widget _buildVerySmallLayout() {
+  return SingleChildScrollView(
+    padding: const EdgeInsets.all(8),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text('Estadísticas', style: TextStyle(fontSize: 14)),
+        const SizedBox(height: 10),
+
+        Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: _buildIMCDisplay(showChart: false),
           ),
-          const SizedBox(height: 20),
+        ),
+        const SizedBox(height: 20),
 
-          // Paso diario
-          const StepCounterWidget(),
-          const SizedBox(height: 20),
+        const StepCounterWidget(),
+        const SizedBox(height: 20),
 
-          // Nueva card para gráfica semanal
-          Card(
-            elevation: 6,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: const Padding(
-              padding: EdgeInsets.all(16),
-              child: WeeklyStepChart(),
-            ),
+        Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: const Padding(
+            padding: EdgeInsets.all(16),
+            child: WeeklyStepChart(),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+
+        const SizedBox(height: 20),
+
+        // Agrego la lista de rutinas completadas dentro de un card
+        Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: const Padding(
+            padding: EdgeInsets.all(12),
+            child: RoutinesComplete(),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+  // Dentro de _buildMobileLayout():
 
   Widget _buildMobileLayout() {
     return SingleChildScrollView(
@@ -127,6 +141,10 @@ class StaticsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
+          const StepCounterWidget(),
+
+          const SizedBox(height: 30),
+
           Card(
             elevation: 6,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -135,9 +153,7 @@ class StaticsScreen extends StatelessWidget {
               child: _buildIMCDisplay(showChart: true),
             ),
           ),
-          const SizedBox(height: 30),
 
-          const StepCounterWidget(),
           const SizedBox(height: 30),
 
           Card(
@@ -148,10 +164,23 @@ class StaticsScreen extends StatelessWidget {
               child: WeeklyStepChart(),
             ),
           ),
+          
+          const SizedBox(height: 30),
+
+          Card(
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: RoutinesComplete(),
+            ),
+          ),
         ],
       ),
     );
   }
+
+  // Dentro de _buildLargeScreenLayout():
 
   Widget _buildLargeScreenLayout() {
     return SingleChildScrollView(
@@ -164,6 +193,10 @@ class StaticsScreen extends StatelessWidget {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
 
+          const StepCounterWidget(),
+
+          const SizedBox(height: 30),
+
           Card(
             elevation: 6,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -172,9 +205,7 @@ class StaticsScreen extends StatelessWidget {
               child: _buildIMCDisplay(showChart: true),
             ),
           ),
-          const SizedBox(height: 30),
 
-          const StepCounterWidget(),
           const SizedBox(height: 30),
 
           Card(
@@ -183,6 +214,17 @@ class StaticsScreen extends StatelessWidget {
             child: const Padding(
               padding: EdgeInsets.all(32),
               child: WeeklyStepChart(),
+            ),
+          ),
+
+          const SizedBox(height: 30),
+
+          Card(
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: const Padding(
+              padding: EdgeInsets.all(32),
+              child: RoutinesComplete(),
             ),
           ),
         ],

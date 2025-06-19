@@ -1,8 +1,34 @@
 import 'package:flutter/material.dart';
 import '../widgets/app_scaffold.dart';
+import '../widgets/routine_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ExercisesScreen extends StatelessWidget {
+
+class ExercisesScreen extends StatefulWidget {
   const ExercisesScreen({super.key});
+
+  @override
+  State<ExercisesScreen> createState() => _ExercisesScreenState();
+}
+
+class _ExercisesScreenState extends State<ExercisesScreen> {
+  final List<Map<String, String>> routines = const [
+    {'title': 'Barbell Rows', 'time': '10 Minutes', 'reps': '3 Rep'},
+    {'title': 'Push Ups', 'time': '8 Minutes', 'reps': '4 Rep'},
+    {'title': 'Plank Hold', 'time': '5 Minutes', 'reps': '2 Rep'},
+    {'title': 'Squats', 'time': '12 Minutes', 'reps': '5 Rep'},
+    {'title': 'Deadlifts', 'time': '15 Minutes', 'reps': '4 Rep'},
+  ];
+
+  late List<bool> selected;
+
+  @override
+  void initState() {
+    super.initState();
+    selected = List.generate(routines.length, (_) => false);
+    _cargarRutinasCompletadas();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,56 +47,71 @@ class ExercisesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVerySmallLayout() {
-    final List<Map<String, String>> routines = [
-      {'title': 'Barbell Rows', 'time': '10 Minutes', 'reps': '3 Rep'},
-      {'title': 'Push Ups', 'time': '8 Minutes', 'reps': '4 Rep'},
-      {'title': 'Plank Hold', 'time': '5 Minutes', 'reps': '2 Rep'},
-      {'title': 'Squats', 'time': '12 Minutes', 'reps': '5 Rep'},
-      {'title': 'Deadlifts', 'time': '15 Minutes', 'reps': '4 Rep'},
-    ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String? get userId => FirebaseAuth.instance.currentUser?.uid;
 
+  Future<void> _guardarRutinaCompletada(int index, bool isCompleted) async {
+    if (userId == null) return;
+
+    final rutina = routines[index];
+    final docRef = _firestore.collection('rutinas_completadas').doc('$userId-${rutina['title']}');
+
+    if (isCompleted) {
+      // Guardar rutina completada
+      await docRef.set({
+        'title': rutina['title'],
+        'time': rutina['time'],
+        'reps': rutina['reps'],
+        'completedAt': FieldValue.serverTimestamp(),
+      });
+    } else {
+      // Eliminar rutina si se desmarca
+      await docRef.delete();
+    }
+  }
+
+  Future<void> _cargarRutinasCompletadas() async {
+  if (userId == null) return;
+
+  final querySnapshot = await _firestore
+      .collection('rutinas_completadas')
+      .where(FieldPath.documentId, whereIn: routines.map((r) => '$userId-${r['title']}').toList())
+      .get();
+
+  final completedDocs = querySnapshot.docs.map((doc) => doc.id).toSet();
+
+  setState(() {
+    for (int i = 0; i < routines.length; i++) {
+      final docId = '$userId-${routines[i]['title']}';
+      selected[i] = completedDocs.contains(docId);
+    }
+  });
+}
+
+  Widget _buildVerySmallLayout() {
     return SafeArea(
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         itemCount: routines.length,
         itemBuilder: (context, index) {
           final routine = routines[index];
-          return Container(
-            width: double.infinity,
+          return RoutineCard(
+            title: routine['title']!,
+            time: routine['time']!,
+            reps: routine['reps']!,
             height: 160,
-            margin: const EdgeInsets.only(bottom: 12),
+            fontSize: 14,
+            iconSize: 14,
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFe0f0ff),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 60),
-                Text(
-                  routine['title'] ?? '',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Icons.timer, size: 14, color: Colors.blue),
-                    const SizedBox(width: 4),
-                    Text(routine['time'] ?? '', style: const TextStyle(fontSize: 12)),
-                    const SizedBox(width: 12),
-                    const Icon(Icons.fitness_center, size: 14, color: Colors.purple),
-                    const SizedBox(width: 4),
-                    Text(routine['reps'] ?? '', style: const TextStyle(fontSize: 12)),
-                  ],
-                ),
-              ],
-            ),
+            backgroundColor: const Color(0xFFe0f0ff),
+            boxShadow: const [],
+            isSelected: selected[index],
+            onChanged: (value) async {
+            setState(() {
+              selected[index] = value;
+            });
+            await _guardarRutinaCompletada(index, value);
+          },
           );
         },
       ),
@@ -78,63 +119,35 @@ class ExercisesScreen extends StatelessWidget {
   }
 
   Widget _buildMobileLayout() {
-    final List<Map<String, String>> routines = [
-      {'title': 'Barbell Rows', 'time': '10 Minutes', 'reps': '3 Rep'},
-      {'title': 'Push Ups', 'time': '8 Minutes', 'reps': '4 Rep'},
-      {'title': 'Plank Hold', 'time': '5 Minutes', 'reps': '2 Rep'},
-      {'title': 'Squats', 'time': '12 Minutes', 'reps': '5 Rep'},
-      {'title': 'Deadlifts', 'time': '15 Minutes', 'reps': '4 Rep'},
-    ];
-
     return SafeArea(
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         itemCount: routines.length,
         itemBuilder: (context, index) {
           final routine = routines[index];
-          return Container(
-            width: double.infinity,
+          return RoutineCard(
+            title: routine['title']!,
+            time: routine['time']!,
+            reps: routine['reps']!,
             height: 180,
-            margin: const EdgeInsets.only(bottom: 14),
+            fontSize: 16,
+            iconSize: 16,
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: const Color(0xFFd0eaff),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  // ignore: deprecated_member_use
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 4,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Spacer(),
-                Text(
-                  routine['title'] ?? '',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Icons.timer, size: 16, color: Colors.blue),
-                    const SizedBox(width: 6),
-                    Text(routine['time'] ?? '', style: const TextStyle(fontSize: 14)),
-                    const SizedBox(width: 16),
-                    const Icon(Icons.fitness_center, size: 16, color: Colors.purple),
-                    const SizedBox(width: 6),
-                    Text(routine['reps'] ?? '', style: const TextStyle(fontSize: 14)),
-                  ],
-                ),
-              ],
-            ),
+            backgroundColor: const Color(0xFFd0eaff),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 3),
+              ),
+            ],
+            isSelected: selected[index],
+            onChanged: (value) async {
+            setState(() {
+              selected[index] = value;
+            });
+            await _guardarRutinaCompletada(index, value);
+          },
           );
         },
       ),
@@ -142,14 +155,6 @@ class ExercisesScreen extends StatelessWidget {
   }
 
   Widget _buildLargeScreenLayout() {
-    final List<Map<String, String>> routines = [
-      {'title': 'Barbell Rows', 'time': '10 Minutes', 'reps': '3 Rep'},
-      {'title': 'Push Ups', 'time': '8 Minutes', 'reps': '4 Rep'},
-      {'title': 'Plank Hold', 'time': '5 Minutes', 'reps': '2 Rep'},
-      {'title': 'Squats', 'time': '12 Minutes', 'reps': '5 Rep'},
-      {'title': 'Deadlifts', 'time': '15 Minutes', 'reps': '4 Rep'},
-    ];
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
@@ -157,49 +162,29 @@ class ExercisesScreen extends StatelessWidget {
           itemCount: routines.length,
           itemBuilder: (context, index) {
             final routine = routines[index];
-            return Container(
-              width: double.infinity,
+            return RoutineCard(
+              title: routine['title']!,
+              time: routine['time']!,
+              reps: routine['reps']!,
               height: 200,
-              margin: const EdgeInsets.only(bottom: 20),
+              fontSize: 20,
+              iconSize: 20,
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFFcce5ff),
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    // ignore: deprecated_member_use
-                    color: Colors.black.withOpacity(0.07),
-                    blurRadius: 6,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Spacer(),
-                  Text(
-                    routine['title'] ?? '',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.timer, size: 20, color: Colors.blue),
-                      const SizedBox(width: 8),
-                      Text(routine['time'] ?? '', style: const TextStyle(fontSize: 16)),
-                      const SizedBox(width: 20),
-                      const Icon(Icons.fitness_center, size: 20, color: Colors.purple),
-                      const SizedBox(width: 8),
-                      Text(routine['reps'] ?? '', style: const TextStyle(fontSize: 16)),
-                    ],
-                  ),
-                ],
-              ),
+              backgroundColor: const Color(0xFFcce5ff),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.07),
+                  blurRadius: 6,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+              isSelected: selected[index],
+              onChanged: (value) async {
+              setState(() {
+                selected[index] = value;
+              });
+              await _guardarRutinaCompletada(index, value);
+            },
             );
           },
         ),
