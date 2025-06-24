@@ -80,52 +80,42 @@ class StaticsScreen extends StatelessWidget {
 
 // Dentro de tu _buildVerySmallLayout():
 
-Widget _buildVerySmallLayout() {
-  return SingleChildScrollView(
-    padding: const EdgeInsets.all(8),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text('Estadísticas', style: TextStyle(fontSize: 14)),
-        const SizedBox(height: 10),
+  Widget _buildVerySmallLayout() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Estadísticas', style: TextStyle(fontSize: 14)),
+          const SizedBox(height: 10),
+          const StepCounterWidget(),
 
-        Card(
-          elevation: 6,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: _buildIMCDisplay(showChart: false),
+          const SizedBox(height: 20),
+
+          Card(
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: _buildIMCDisplay(showChart: false),
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
 
-        const StepCounterWidget(),
-        const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-        Card(
-          elevation: 6,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: const Padding(
-            padding: EdgeInsets.all(16),
-            child: WeeklyStepChart(),
+          // Agrego la lista de rutinas completadas dentro de un card
+          Card(
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: const Padding(
+              padding: EdgeInsets.all(12),
+              child: RoutinesComplete(),
+            ),
           ),
-        ),
-
-        const SizedBox(height: 20),
-
-        // Agrego la lista de rutinas completadas dentro de un card
-        Card(
-          elevation: 6,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: const Padding(
-            padding: EdgeInsets.all(12),
-            child: RoutinesComplete(),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   // Dentro de _buildMobileLayout():
 

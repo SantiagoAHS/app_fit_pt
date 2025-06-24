@@ -71,47 +71,57 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   }
 
   Future<void> _cargarRutinasCompletadas() async {
-  if (userId == null) return;
+    if (userId == null) return;
 
-  final querySnapshot = await _firestore
-      .collection('rutinas_completadas')
-      .where(FieldPath.documentId, whereIn: routines.map((r) => '$userId-${r['title']}').toList())
-      .get();
+    final querySnapshot = await _firestore
+        .collection('rutinas_completadas')
+        .where(FieldPath.documentId, whereIn: routines.map((r) => '$userId-${r['title']}').toList())
+        .get();
 
-  final completedDocs = querySnapshot.docs.map((doc) => doc.id).toSet();
+    final completedDocs = querySnapshot.docs.map((doc) => doc.id).toSet();
 
-  setState(() {
-    for (int i = 0; i < routines.length; i++) {
-      final docId = '$userId-${routines[i]['title']}';
-      selected[i] = completedDocs.contains(docId);
-    }
-  });
-}
+    setState(() {
+      for (int i = 0; i < routines.length; i++) {
+        final docId = '$userId-${routines[i]['title']}';
+        selected[i] = completedDocs.contains(docId);
+      }
+    });
+  }
 
   Widget _buildVerySmallLayout() {
     return SafeArea(
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        itemCount: routines.length,
-        itemBuilder: (context, index) {
-          final routine = routines[index];
-          return RoutineCard(
-            title: routine['title']!,
-            time: routine['time']!,
-            reps: routine['reps']!,
-            height: 160,
-            fontSize: 14,
-            iconSize: 14,
-            padding: const EdgeInsets.all(10),
-            backgroundColor: const Color(0xFFe0f0ff),
-            boxShadow: const [],
-            isSelected: selected[index],
-            onChanged: (value) async {
-            setState(() {
-              selected[index] = value;
-            });
-            await _guardarRutinaCompletada(index, value);
-          },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            itemCount: routines.length,
+            itemBuilder: (context, index) {
+              final routine = routines[index];
+
+              return ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: constraints.maxWidth, // asegura que no exceda el ancho
+                ),
+                child: RoutineCard(
+                  title: routine['title']!,
+                  time: routine['time']!,
+                  reps: routine['reps']!,
+                  height: 120, // más compacto
+                  fontSize: 12,
+                  iconSize: 12,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  backgroundColor: const Color(0xFFe0f0ff),
+                  boxShadow: const [],
+                  isSelected: selected[index],
+                  onChanged: (value) async {
+                    setState(() {
+                      selected[index] = value;
+                    });
+                    await _guardarRutinaCompletada(index, value);
+                  },
+                ),
+              );
+            },
           );
         },
       ),

@@ -106,46 +106,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildVerySmallLayout() {
-  final user = FirebaseAuth.instance.currentUser;
-  final email = user?.email ?? 'Correo no disponible';
-  final uid = user?.uid ?? '';
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email ?? 'Correo no disponible';
+    final uid = user?.uid ?? '';
 
-  return SafeArea(
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Perfil',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            email,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 10, color: Colors.grey),
-          ),
-          const SizedBox(height: 10),
-          _buildDataDisplay(uid), // Asegúrate de que este widget sea compacto
-          const SizedBox(height: 10),
-          _buildForm(), // Ajusta dentro de este widget los paddings y tamaños también
-          const SizedBox(height: 12),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.logout, size: 14),
-            label: const Text('Salir', style: TextStyle(fontSize: 10)),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 6),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.blueAccent,
+              child: Icon(Icons.person, size: 16, color: Colors.white),
             ),
-            onPressed: _signOut,
-          ),
-        ],
+            const SizedBox(height: 8),
+            const Text(
+              'Perfil',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              email,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 9, color: Colors.grey),
+            ),
+            const Divider(height: 16, thickness: 0.5),
+            _buildDataDisplay(uid),
+            const SizedBox(height: 8),
+            _buildForm(),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _signOut,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                minimumSize: const Size(double.infinity, 28),
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text(
+                'Salir',
+                style: TextStyle(fontSize: 10),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildMobileLayout() {
     final user = FirebaseAuth.instance.currentUser;
@@ -153,25 +162,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final uid = user?.uid ?? '';
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text('Bienvenido a tu perfil', style: TextStyle(fontSize: 18)),
-          const SizedBox(height: 8),
-          Text(email, style: const TextStyle(fontSize: 16, color: Colors.grey)),
-          const SizedBox(height: 20),
+          const CircleAvatar(
+            radius: 40,
+            backgroundColor: Colors.blueAccent,
+            child: Icon(Icons.person, size: 40, color: Colors.white),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Tu Perfil',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            email,
+            style: const TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+          const Divider(height: 32, thickness: 1),
+          
           _buildDataDisplay(uid),
           const SizedBox(height: 20),
+          const Text(
+            'Actualizar datos',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 10),
           _buildForm(),
+
           const SizedBox(height: 24),
           ElevatedButton.icon(
             icon: const Icon(Icons.logout),
             label: const Text('Cerrar sesión'),
-            onPressed: _signOut,
             style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
+            onPressed: _signOut,
           ),
         ],
       ),
