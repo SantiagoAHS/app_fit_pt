@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/app_scaffold.dart';
-import '../widgets/routine_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:appfit_dia/screens/mobile/exersices_mobile.dart';
+import 'package:appfit_dia/screens/watch/exercises_watch.dart';
+import 'package:appfit_dia/screens/tv/exercieses_tv.dart';
 
 class ExercisesScreen extends StatefulWidget {
   const ExercisesScreen({super.key});
@@ -30,23 +31,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     _cargarRutinasCompletadas();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isVerySmallScreen = screenWidth < 300;
-    final isSmallScreen = screenWidth < 600;
-
-    return AppScaffold(
-      title: 'Ejercicios',
-      body: isVerySmallScreen
-          ? _buildVerySmallLayout()
-          : isSmallScreen
-              ? _buildMobileLayout()
-              : _buildLargeScreenLayout(),
-      appBarActions: const [],
-    );
-  }
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? get userId => FirebaseAuth.instance.currentUser?.uid;
 
@@ -57,7 +41,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     final docRef = _firestore.collection('rutinas_completadas').doc('$userId-${rutina['title']}');
 
     if (isCompleted) {
-      // Guardar rutina completada
       await docRef.set({
         'title': rutina['title'],
         'time': rutina['time'],
@@ -65,7 +48,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         'completedAt': FieldValue.serverTimestamp(),
       });
     } else {
-      // Eliminar rutina si se desmarca
       await docRef.delete();
     }
   }
@@ -88,117 +70,27 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     });
   }
 
-  Widget _buildVerySmallLayout() {
-    return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-            itemCount: routines.length,
-            itemBuilder: (context, index) {
-              final routine = routines[index];
-
-              return ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: constraints.maxWidth, // asegura que no exceda el ancho
-                ),
-                child: RoutineCard(
-                  title: routine['title']!,
-                  time: routine['time']!,
-                  reps: routine['reps']!,
-                  height: 120, // más compacto
-                  fontSize: 12,
-                  iconSize: 12,
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                  backgroundColor: const Color(0xFFe0f0ff),
-                  boxShadow: const [],
-                  isSelected: selected[index],
-                  onChanged: (value) async {
-                    setState(() {
-                      selected[index] = value;
-                    });
-                    await _guardarRutinaCompletada(index, value);
-                  },
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
+  void _onChanged(int index, bool value) async {
+    setState(() {
+      selected[index] = value;
+    });
+    await _guardarRutinaCompletada(index, value);
   }
 
-  Widget _buildMobileLayout() {
-    return SafeArea(
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        itemCount: routines.length,
-        itemBuilder: (context, index) {
-          final routine = routines[index];
-          return RoutineCard(
-            title: routine['title']!,
-            time: routine['time']!,
-            reps: routine['reps']!,
-            height: 180,
-            fontSize: 16,
-            iconSize: 16,
-            padding: const EdgeInsets.all(14),
-            backgroundColor: const Color(0xFFd0eaff),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 4,
-                offset: const Offset(0, 3),
-              ),
-            ],
-            isSelected: selected[index],
-            onChanged: (value) async {
-            setState(() {
-              selected[index] = value;
-            });
-            await _guardarRutinaCompletada(index, value);
-          },
-          );
-        },
-      ),
-    );
-  }
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isVerySmallScreen = screenWidth < 300;
+    final isSmallScreen = screenWidth < 600;
 
-  Widget _buildLargeScreenLayout() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-        child: ListView.builder(
-          itemCount: routines.length,
-          itemBuilder: (context, index) {
-            final routine = routines[index];
-            return RoutineCard(
-              title: routine['title']!,
-              time: routine['time']!,
-              reps: routine['reps']!,
-              height: 200,
-              fontSize: 20,
-              iconSize: 20,
-              padding: const EdgeInsets.all(20),
-              backgroundColor: const Color(0xFFcce5ff),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.07),
-                  blurRadius: 6,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-              isSelected: selected[index],
-              onChanged: (value) async {
-              setState(() {
-                selected[index] = value;
-              });
-              await _guardarRutinaCompletada(index, value);
-            },
-            );
-          },
-        ),
-      ),
+    return AppScaffold(
+      title: 'Ejercicios',
+      body: isVerySmallScreen
+          ? ExercisesWatchLayout(routines: routines, selected: selected, onChanged: _onChanged)
+          : isSmallScreen
+              ? ExercisesMobileLayout(routines: routines, selected: selected, onChanged: _onChanged)
+              : ExercisesLargeScreenLayout(routines: routines, selected: selected, onChanged: _onChanged),
+      appBarActions: const [],
     );
   }
 }

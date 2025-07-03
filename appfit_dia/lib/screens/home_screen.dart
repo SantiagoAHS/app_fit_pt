@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../widgets/app_scaffold.dart';
+import 'package:appfit_dia/screens/watch/home_watch.dart';
+import 'package:appfit_dia/screens/tv/home_tv.dart';
+import 'package:appfit_dia/screens/mobile/home_mobile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,108 +57,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return AppScaffold(
       title: 'Inicio',
-      body: isVerySmallScreen
-          ? _buildVerySmallLayout()
-          : isSmallScreen
-              ? _buildMobileLayout()
-              : _buildLargeScreenLayout(),
       appBarActions: const [],
-    );
-  }
-
-  Widget _buildVerySmallLayout() {
-    return SafeArea(
-      child: Center(
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 800),
-          opacity: _visible ? 1.0 : 0.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  child: Text(
-                    _messages[_currentMessageIndex],
-                    key: ValueKey(_messages[_currentMessageIndex]),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+      body: isVerySmallScreen
+          ? HomeWatchLayout(
+              message: _messages[_currentMessageIndex],
+              visible: _visible,
+            )
+          : isSmallScreen
+              ? HomeMobileLayout(
+                  message: _messages[_currentMessageIndex],
+                  visible: _visible,
+                )
+              : HomeLargeLayout(
+                  message: _messages[_currentMessageIndex],
+                  visible: _visible,
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMobileLayout() {
-    return SafeArea(
-      child: Center(
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 800),
-          opacity: _visible ? 1.0 : 0.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  child: Text(
-                    _messages[_currentMessageIndex],
-                    key: ValueKey(_messages[_currentMessageIndex]),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLargeScreenLayout() {
-    return SafeArea(
-      child: Center(
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 800),
-          opacity: _visible ? 1.0 : 0.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  child: Text(
-                    _messages[_currentMessageIndex],
-                    key: ValueKey(_messages[_currentMessageIndex]),
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
