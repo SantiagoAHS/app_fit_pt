@@ -18,9 +18,28 @@ class StaticsLargeLayout extends StatelessWidget {
             'Bienvenido a la pantalla de estadísticas',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-           StepCounterWidget(),
-           SizedBox(height: 30),
-           Card(
+
+          SizedBox(height: 20),
+
+          // Subtítulo para Step Counter
+          Text(
+            'Contador de Pasos',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 12),
+          StepCounterWidget(),
+
+          SizedBox(height: 30),
+
+          // Subtítulo para IMC
+          Text(
+            'Índice de Masa Corporal (IMC)',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 12),
+          Card(
             elevation: 6,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
             child: Padding(
@@ -28,17 +47,31 @@ class StaticsLargeLayout extends StatelessWidget {
               child: IMCDisplay(showChart: true),
             ),
           ),
-           SizedBox(height: 30),
-           Card(
-            elevation: 6,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
-            child: Padding(
-              padding: EdgeInsets.all(32),
-              child: WeeklyStepChart(),
-            ),
+
+          SizedBox(height: 30),
+
+          // Subtítulo para Weekly Step Chart
+          Text(
+            'Pasos Semanales',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
           ),
-           SizedBox(height: 30),
-           Card(
+          SizedBox(height: 12),
+          Padding(
+            padding: EdgeInsets.all(32),
+            child: WeeklyStepChart(),
+          ),
+
+          SizedBox(height: 30),
+
+          // Subtítulo para Rutinas Completadas
+          Text(
+            'Rutinas Completadas',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 12),
+          Card(
             elevation: 6,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
             child: Padding(

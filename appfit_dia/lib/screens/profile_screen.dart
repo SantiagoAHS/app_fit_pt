@@ -233,10 +233,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final email = user?.email ?? 'Correo no disponible';
     final uid = user?.uid ?? '';
 
+    double maxWidth = 900;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double containerWidth = screenWidth * 0.6;
+    if (containerWidth > maxWidth) containerWidth = maxWidth;
+
     return Center(
       child: Container(
-        width: 400,
-        padding: const EdgeInsets.all(32),
+        width: containerWidth,
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.blueGrey.shade50,
           borderRadius: BorderRadius.circular(12),
@@ -244,32 +249,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
             BoxShadow(color: Colors.black12, blurRadius: 12, offset: Offset(0, 6))
           ],
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Bienvenido a tu perfil',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Text(email, style: const TextStyle(fontSize: 16, color: Colors.grey)),
-              const SizedBox(height: 20),
-              _buildDataDisplay(uid),
-              const SizedBox(height: 20),
-              _buildForm(),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.logout),
-                label: const Text('Cerrar sesión'),
-                onPressed: _signOut,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  textStyle: const TextStyle(fontSize: 18),
+        child: Scrollbar(
+          thumbVisibility: true,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Bienvenido a tu perfil',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                Text(
+                  email,
+                  style: const TextStyle(fontSize: 18, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+
+                // Distribución horizontal: datos a la izquierda, formulario a la derecha
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Parte izquierda - Información de usuario
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Información de usuario',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 12),
+                          _buildDataDisplay(uid),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(width: 40),
+
+                    // Parte derecha - Formulario
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Editar perfil',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 12),
+                          _buildForm(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10),  // Más espacio antes del botón
+
+                // Botón centrado al final, color rojo
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.logout),
+                        label: const Text('Cerrar sesión'),
+                        onPressed: _signOut,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,  // Texto e icono blancos
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      const SizedBox(height: 8), // Espacio pequeño debajo del botón
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+
 }
