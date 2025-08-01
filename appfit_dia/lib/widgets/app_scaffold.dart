@@ -36,7 +36,7 @@ class AppScaffold extends StatelessWidget {
                   itemBuilder: (BuildContext context) => [
                     const PopupMenuItem(value: '/inicio', child: Text('Inicio')),
                     const PopupMenuItem(value: '/estadisticas', child: Text('Estadísticas')),
-                    const PopupMenuItem(value: '/ejercicios', child: Text('Ejercicios')),
+                   /* const PopupMenuItem(value: '/ejercicios', child: Text('Ejercicios')),*/
                     const PopupMenuItem(value: '/perfil', child: Text('Perfil')),
                     const PopupMenuItem(value: '/ayuda', child: Text('Ayuda')),
                   ],

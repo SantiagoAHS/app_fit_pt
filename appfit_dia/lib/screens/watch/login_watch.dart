@@ -28,7 +28,7 @@ class LoginWatchLayout extends StatelessWidget {
             children: [
               const CircleAvatar(
                 radius: 20,
-                backgroundColor: Colors.blue,
+                backgroundColor: Color.fromRGBO(27, 94, 32, 1),
                 child: Icon(Icons.fitness_center, color: Colors.white, size: 16),
               ),
               const SizedBox(height: 8),

@@ -111,7 +111,7 @@ class _StepCounterWidgetState extends State<StepCounterWidget> {
             const SizedBox(height: 20),
             Text(
               '$_steps',
-              style: TextStyle(fontSize: stepsFontSize, color: Colors.blueAccent),
+              style: TextStyle(fontSize: stepsFontSize, color: Colors.green.shade900, fontWeight: FontWeight.w600),
             ),
           ],
         ),

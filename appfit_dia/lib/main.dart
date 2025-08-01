@@ -25,29 +25,29 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Mi App con Menú',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFc8d7e6),
-        primaryColor: const Color(0xFF3691f6),
+        scaffoldBackgroundColor: const Color(0xFFF2F3F4),
+        primaryColor: const Color(0xFF2ECC71),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF3691f6),
-          primary: const Color(0xFF3691f6),
-          secondary: const Color(0xFF78bcf5),
-          surface: const Color(0xFFc8d7e6),
+          seedColor: const Color(0xFF2ECC71),
+          primary: const Color(0xFF2ECC71),
+          secondary: const Color(0xFF27AE60),
+          surface: const Color(0xFFF2F3F4),
           onPrimary: Colors.white,
           onSecondary: Colors.white,
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF053f7e),
+          backgroundColor: Color(0xFF145A32),
           foregroundColor: Colors.white,
         ),
         textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Color(0xFF797a87)),
+          bodyMedium: TextStyle(color: Color(0xFF1C2833)),
           titleLarge: TextStyle(
-            color: Color(0xFF053f7e),
+            color: Color(0xFF145A32),
             fontWeight: FontWeight.bold,
           ),
         ),
         drawerTheme: const DrawerThemeData(
-          backgroundColor: Color(0xFFc8d7e6),
+          backgroundColor: Color(0xFFF2F3F4),
         ),
       ),
 

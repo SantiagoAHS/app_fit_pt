@@ -12,26 +12,35 @@ class CompletedRoutineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 350;
+
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      margin: EdgeInsets.symmetric(
+        vertical: isSmallScreen ? 4 : 8,
+        horizontal: isSmallScreen ? 8 : 16,
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: isSmallScreen ? 8 : 16,
+        horizontal: isSmallScreen ? 12 : 20,
+      ),
       decoration: BoxDecoration(
         color: Colors.green[100],
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.green.withOpacity(0.3),
-            blurRadius: 5,
-            offset: const Offset(0, 3),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 18,
+        style: TextStyle(
+          fontSize: isSmallScreen ? 12 : 18,
           fontWeight: FontWeight.w600,
-          color: Colors.green,
+          color: Colors.green[800],
         ),
       ),
     );

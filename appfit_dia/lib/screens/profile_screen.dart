@@ -118,19 +118,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             const CircleAvatar(
               radius: 20,
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color.fromARGB(255, 19, 108, 65),
               child: Icon(Icons.person, size: 16, color: Colors.white),
             ),
             const SizedBox(height: 8),
             const Text(
               'Perfil',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             Text(
               email,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 9, color: Colors.grey),
+              style: const TextStyle(fontSize: 9, color: Colors.black, fontWeight: FontWeight.w500),
             ),
             const Divider(height: 16, thickness: 0.5),
             _buildDataDisplay(uid),
@@ -140,15 +140,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ElevatedButton(
               onPressed: _signOut,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                minimumSize: const Size(double.infinity, 28),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                minimumSize: const Size(100, 32),
                 backgroundColor: Colors.redAccent,
                 foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
-              child: const Text(
-                'Salir',
-                style: TextStyle(fontSize: 10),
-              ),
+                child: const Text(
+                  'Salir',
+                  style: TextStyle(fontSize: 12),
+                ),
             ),
           ],
         ),
