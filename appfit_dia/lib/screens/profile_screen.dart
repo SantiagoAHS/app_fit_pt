@@ -160,59 +160,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildMobileLayout() {
-    final user = FirebaseAuth.instance.currentUser;
-    final email = user?.email ?? 'Correo no disponible';
-    final uid = user?.uid ?? '';
+  final user = FirebaseAuth.instance.currentUser;
+  final email = user?.email ?? 'Correo no disponible';
+  final uid = user?.uid ?? '';
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.blueAccent,
-            child: Icon(Icons.person, size: 40, color: Colors.white),
+  return SingleChildScrollView(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          radius: 40,
+          backgroundColor: Colors.green.shade600,
+          child: const Icon(Icons.person, size: 40, color: Colors.white),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Tu Perfil',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.green, // Texto en verde
           ),
-          const SizedBox(height: 16),
-          const Text(
-            'Tu Perfil',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          email,
+          style: TextStyle(
+            fontSize: 14,
+            color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.8),
           ),
-          const SizedBox(height: 6),
-          Text(
-            email,
-            style: const TextStyle(fontSize: 14, color: Colors.grey),
+        ),
+        const Divider(
+          height: 32,
+          thickness: 1,
+          color: Color.fromARGB(255, 154, 156, 154),
+        ),
+        _buildDataDisplay(uid),
+        const SizedBox(height: 20),
+        Text(
+          'Actualizar datos',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.green.shade800,
           ),
-          const Divider(height: 32, thickness: 1),
-          
-          _buildDataDisplay(uid),
-          const SizedBox(height: 20),
-          const Text(
-            'Actualizar datos',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 10),
-          _buildForm(),
-
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.logout),
-            label: const Text('Cerrar sesión'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+        ),
+        const SizedBox(height: 10),
+        _buildForm(),
+        const SizedBox(height: 24),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.logout),
+          label: const Text('Cerrar sesión'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 255, 1, 1),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-            onPressed: _signOut,
           ),
-        ],
-      ),
-    );
-  }
+          onPressed: _signOut,
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildLargeScreenLayout() {
     final user = FirebaseAuth.instance.currentUser;

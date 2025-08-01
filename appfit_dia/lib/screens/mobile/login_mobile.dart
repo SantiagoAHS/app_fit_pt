@@ -1,4 +1,3 @@
-// archivo: lib/screens/mobile/login_mobile.dart
 import 'package:flutter/material.dart';
 
 class LoginMobileLayout extends StatelessWidget {

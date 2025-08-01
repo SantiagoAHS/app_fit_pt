@@ -15,7 +15,7 @@ class ExercisesScreen extends StatefulWidget {
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
   final List<Map<String, String>> routines = const [
-    {'title': 'Barbell Rows', 'time': '10 Minutes', 'reps': '3 Rep'},
+    {'title': 'Barbell Rows', 'time': '45 Minutes', 'reps': '3 Rep'},
     {'title': 'Push Ups', 'time': '8 Minutes', 'reps': '4 Rep'},
     {'title': 'Plank Hold', 'time': '5 Minutes', 'reps': '2 Rep'},
     {'title': 'Squats', 'time': '12 Minutes', 'reps': '5 Rep'},

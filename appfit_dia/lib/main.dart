@@ -9,6 +9,7 @@ import 'screens/exercises_screen.dart';
 import 'screens/help_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/login_screen.dart'; 
+import 'screens/detalle_rutina.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         '/perfil': (context) => const ProfileScreen(),
         '/ayuda': (context) => const HelpScreen(),
         '/login': (context) => const LoginScreen(),
+        '/detalle_rutina': (context) => const DetalleRutinaScreen(titulo: 'Rutina'),
       },
     );
   }

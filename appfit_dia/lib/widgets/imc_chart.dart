@@ -18,7 +18,7 @@ class IMCChart extends StatelessWidget {
               barRods: [
                 BarChartRodData(
                   toY: imc,
-                  color: Colors.blue,
+                  color: Colors.green,
                   width: 30,
                   borderRadius: BorderRadius.circular(8),
                 ),
