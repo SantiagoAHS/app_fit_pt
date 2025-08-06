@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/step_counter_widget.dart';
+import '../../../widgets/step_counter_read.dart'; // Aquí importamos el widget que solo lee pasos desde Firestore
 import '../../../widgets/routines_complete.dart';
 import '../../../widgets/imc_display.dart';
 
@@ -23,10 +23,10 @@ class StaticsWatchLayout extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Contador de pasos
-          const StepCounterWidget(),
-          const SizedBox(height: 16),
+          // Aquí mostramos los pasos desde Firestore, ideal para smartwatch/emuladores sin sensor
+          const StepsFromFirestoreWidget(),
 
+          const SizedBox(height: 10),
           // Tarjeta de IMC
           Card(
             elevation: 6,

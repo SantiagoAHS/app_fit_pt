@@ -3,6 +3,7 @@ import '../../../widgets/step_counter_widget.dart';
 import '../../../widgets/imc_display.dart';
 import '../../../widgets/step_counter_weekly.dart';
 import '../../../widgets/routines_complete.dart';
+import '../../../widgets/CaloriesBurnedWidget.dart';
 
 class StaticsLargeLayout extends StatelessWidget {
   const StaticsLargeLayout({super.key});
@@ -30,7 +31,13 @@ class StaticsLargeLayout extends StatelessWidget {
           SizedBox(height: 12),
           StepCounterWidget(),
 
+           Text(
+            'Calorías Quemadas',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 30),
+          CaloriesBurnedWidget(),
 
           // Subtítulo para IMC
           Text(
