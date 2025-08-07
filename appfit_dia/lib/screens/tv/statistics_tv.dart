@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/step_counter_widget.dart';
 import '../../../widgets/imc_display.dart';
 import '../../../widgets/step_counter_weekly.dart';
 import '../../../widgets/routines_complete.dart';
 import '../../../widgets/CaloriesBurnedWidget.dart';
+import '../../../widgets/step_counter_readtv.dart';
 
 class StaticsLargeLayout extends StatelessWidget {
   const StaticsLargeLayout({super.key});
@@ -29,7 +29,7 @@ class StaticsLargeLayout extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 12),
-          StepCounterWidget(),
+          StepsFromtvFirestoreWidget(),
 
            Text(
             'Calorías Quemadas',
